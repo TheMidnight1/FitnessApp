@@ -20,7 +20,7 @@ public class PizzaListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pizza_list);
-        buttonAddExercises = findViewById(R.id.buttonAddExercises);
+
 
         listView = findViewById(R.id.listViewExercises);
         dbHelper = new DBHelper(this);
@@ -30,7 +30,7 @@ public class PizzaListActivity extends AppCompatActivity {
         // Set up the adapter
         adapter = new ChestExerciseAdapter(this, R.layout.chest_exercise_list_item, chestExerciseList);
         listView.setAdapter(adapter);
-
+        buttonAddExercises = findViewById(R.id.buttonAddExercises);
         buttonAddExercises.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,12 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BackExerciseAdapter extends ArrayAdapter<BackExercise> {
 
     private int layoutResource;
+
+    static class ViewHolder {
+        CheckBox checkBoxExercise;
+        TextView nameTextView;
+        TextView descriptionTextView;
+    }
 
     public BackExerciseAdapter(Context context, int resource, List<BackExercise> exercises) {
         super(context, resource, exercises);
@@ -20,35 +30,58 @@ public class BackExerciseAdapter extends ArrayAdapter<BackExercise> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+        ViewHolder holder;
 
         if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             view = inflater.inflate(layoutResource, null);
+
+            holder = new ViewHolder();
+            holder.checkBoxExercise = view.findViewById(R.id.checkBoxExercise);
+            holder.nameTextView = view.findViewById(R.id.exerciseNameTextView);
+            holder.descriptionTextView = view.findViewById(R.id.exerciseDescriptionTextView);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
         }
 
-        // Get the current exercise object
         BackExercise exercise = getItem(position);
 
         if (exercise != null) {
             // Set the exercise name and description to the respective TextViews
-            TextView nameTextView = view.findViewById(R.id.exerciseNameTextView);
-            TextView descriptionTextView = view.findViewById(R.id.exerciseDescriptionTextView);
+            holder.nameTextView.setText(exercise.getName());
+            holder.descriptionTextView.setText(exercise.getDescription());
 
-            if (nameTextView != null) {
-                nameTextView.setText(exercise.getName());
-            }
+            // Set the checkbox state
+            holder.checkBoxExercise.setChecked(exercise.isChecked());
+            // Set a tag on the checkbox to remember its position in the list
+            holder.checkBoxExercise.setTag(position);
 
-            if (descriptionTextView != null) {
-                descriptionTextView.setText(exercise.getDescription());
-            }
+            // Add a listener to the checkbox to update the exercise's state when clicked
+            holder.checkBoxExercise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int pos = (Integer) buttonView.getTag();
+                    BackExercise clickedExercise = getItem(pos);
+                    clickedExercise.setChecked(isChecked);
+                }
+            });
         }
 
         return view;
     }
 
-    @Override
-    public BackExercise getItem(int position) {
-        // We explicitly cast the return value to ChestExercise
-        return (BackExercise) super.getItem(position);
+    // Get the list of selected exercises
+    public List<Boolean> getExerciseSelectionList() {
+        List<Boolean> selectionList = new ArrayList<>();
+        for (int i = 0; i < getCount(); i++) {
+            BackExercise exercise = getItem(i);
+            if (exercise != null) {
+                selectionList.add(exercise.isChecked());
+            } else {
+                selectionList.add(false);
+            }
+        }
+        return selectionList;
     }
 }
