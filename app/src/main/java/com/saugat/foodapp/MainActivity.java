@@ -3,7 +3,9 @@ package com.saugat.foodapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,19 +25,19 @@ public class MainActivity extends AppCompatActivity {
     TextView redirectRegister;
     Button btnLogin;
     SQLiteDatabase db;
-
-
+    SharedPreferences preferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        preferences= getSharedPreferences("MyPrefs",MODE_PRIVATE);
         redirectRegister = findViewById(R.id.registerTextView);
         etEmail = findViewById(R.id.emailEditText);
         etPassword = findViewById(R.id.passwordEditText);
         btnLogin = findViewById(R.id.loginButton);
+        SharedPreferences.Editor editor = preferences.edit();
 
         // Create an instance of SQLiteOpenHelper
         SQLiteOpenHelper dbHelper = new DBHelper(this);
@@ -65,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email = ? AND password = ?", new String[]{email, password});
 
                 if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                    @SuppressLint("Range") int userId = cursor.getInt(cursor.getColumnIndex("_id"));
+
+                    // Save the user ID to SharedPreferences
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("userId", userId);
+                    editor.putString("email", email);
+                    editor.apply();
                     // Redirect the user to the home page
                     Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
                     startActivity(intent);

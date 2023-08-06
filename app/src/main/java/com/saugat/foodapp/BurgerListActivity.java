@@ -11,6 +11,7 @@ public class BurgerListActivity extends AppCompatActivity {
     private List<TricepsExercise> tricepsExerciseList;
     private ListView listView;
     private TricepsExerciseAdapter adapter;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +19,10 @@ public class BurgerListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_burger_list);
 
         listView = findViewById(R.id.listViewExercises);
-        // Create a list of chest exercises
-        tricepsExerciseList = new ArrayList<>();
-        tricepsExerciseList.add(new TricepsExercise("Bench Press", "Lie flat on your back and press the barbell away from your chest."));
-       tricepsExerciseList.add(new TricepsExercise("Push-ups", "Support your body with your arms and push up and down."));
-        tricepsExerciseList.add(new TricepsExercise("Dumbbell Flyes", "Lie on a bench and open and close your arms with dumbbells."));
-        // Add more exercises as needed
+        dbHelper = new DBHelper(this);
 
+        // Fetch chest exercises from the database
+        List<TricepsExercise> tricepsExerciseList = dbHelper.getTricepsExercises();
         // Set up the adapter
         adapter = new TricepsExerciseAdapter(this, R.layout.tricpes_exercise_list_item, tricepsExerciseList);
         listView.setAdapter(adapter);

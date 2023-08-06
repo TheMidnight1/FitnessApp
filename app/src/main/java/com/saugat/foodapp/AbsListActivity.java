@@ -6,25 +6,25 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LegListActivity extends AppCompatActivity {
+public class AbsListActivity extends AppCompatActivity {
 
-    private List<LegExercise> legExerciseList;
+    private List<AbsExercise> absExerciseList;
     private ListView listView;
-    private LegExerciseAdapter adapter;
+    private AbsExerciseAdapter adapter;
     private DBHelper dbHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_biceps_list);
+        setContentView(R.layout.activity_abs_list);
 
         listView = findViewById(R.id.listViewExercises);
         dbHelper = new DBHelper(this);
-
+        // Create a list of chest exercises
         // Fetch chest exercises from the database
-        List<LegExercise> legExerciseList = dbHelper.getLegExercises();
+        List<AbsExercise> absExerciseList = dbHelper.getAbsExercises();
+
         // Set up the adapter
-        adapter = new LegExerciseAdapter(this, R.layout.biceps_exercise_list_item, legExerciseList);
+        adapter = new AbsExerciseAdapter(this, R.layout.abs_exercise_list_item, absExerciseList);
         listView.setAdapter(adapter);
     }
 }

@@ -12,20 +12,16 @@ public class FriesListActivity extends AppCompatActivity {
     private ListView listView;
     private BackExerciseAdapter adapter;
 
+    private DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fries_list);
 
         listView = findViewById(R.id.listViewExercises);
-
-        // Create a list of chest exercises
-        backExerciseList = new ArrayList<>();
-        backExerciseList.add(new BackExercise("Pull up", "Lie flat on your back and press the barbell away from your chest."));
-        backExerciseList.add(new BackExercise("Push-ups", "Support your body with your arms and push up and down."));
-        backExerciseList.add(new BackExercise("Dumbbell Flyes", "Lie on a bench and open and close your arms with dumbbells."));
-        // Add more exercises as needed
-
+        dbHelper = new DBHelper(this);
+        List<BackExercise> backExerciseList = dbHelper.getBackExercises();
         // Set up the adapter
         adapter = new BackExerciseAdapter(this, R.layout.back_exercise_list_item, backExerciseList);
         listView.setAdapter(adapter);

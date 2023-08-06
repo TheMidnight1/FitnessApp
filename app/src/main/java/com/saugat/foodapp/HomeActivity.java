@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

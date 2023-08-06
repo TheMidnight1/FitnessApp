@@ -14,4 +14,12 @@
         android:title="Logout"
 
         />
+    <item
+        android:id="@+id/myExercises"
+        android:title="My exercises"
+
+        />
+
+
+
 </menu>
